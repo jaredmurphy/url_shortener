@@ -1,6 +1,6 @@
 # URL shortenr 
 
-## Plans
+## Thoughts
 #### Rails API
 Models: 
 * url
@@ -8,6 +8,7 @@ Models:
   * hashed_id (base64? base256?) unique 
   * full_url
   * domain
+  * # of times accessed
 
 Routes:
 * Get 
@@ -22,3 +23,8 @@ Routes:
 
 * URL shortner - should happen either in model or let SQL handle it
 
+
+#### Testing 
+1. Url 
+  * valid url?
+    * format - solve with RegEx
