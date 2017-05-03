@@ -13,6 +13,9 @@ class Url < ApplicationRecord
     self.access_count = self.access_count + 1 
   end
 
+  scope :location, -> (s_link) { find_by(short_link: s_link).full_link } 
+  scope :top, -> { all.order(access_count: :desc) }
+
   private 
 
   def default_access_count

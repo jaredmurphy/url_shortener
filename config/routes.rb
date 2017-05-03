@@ -1,3 +1,11 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  get "/:short_link", to: "urls#show"
+
+  namespace :api do 
+    namespace :v1 do 
+      get "/urls/lists/top", to: "urls#top"
+      post "/urls", to: "urls#create"
+    end
+  end
+
 end
