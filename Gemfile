@@ -26,6 +26,8 @@ gem 'puma', '~> 3.0'
 # gem 'rack-cors'
 
 group :development, :test do
+  gem 'faker'
+  gem 'factory_girl_rails'
   gem 'rspec-rails', '~> 3.5'
   gem 'byebug', platform: :mri
 end
