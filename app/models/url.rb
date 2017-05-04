@@ -14,17 +14,22 @@ class Url < ApplicationRecord
     self.update_attributes!(access_count: access_count + 1)
   end
 
-  scope :location, -> (s_link) { find_by(short_link: s_link).full_link }
+  scope :location, -> (s_link) { Url.find(generate_id_from_short_link(s_link)).full_link }
   scope :top, -> { all.order(access_count: :desc) }
+
+  @@chars = [*'0'..'9', *'a'..'z', *'A'..'Z', "_", "-"]
 
   def generate_short_link
     # concepts for generating short link are gathered from these two resources
     # http://stackoverflow.com/questions/742013/how-to-code-a-url-shortener/742047#742047
     # https://gist.github.com/zumbojo/1073996
-    chars = [*'0'..'9', *'a'..'z', *'A'..'Z', "_", "-"]
     id = self.id
-    short_link = bijective_encode(id, chars)
+    short_link = bijective_encode(id)
     self.update_attributes!(short_link: short_link)
+  end
+
+  def self.generate_id_from_short_link(short_link)
+    bijective_decode(short_link)
   end
 
   private
@@ -33,18 +38,21 @@ class Url < ApplicationRecord
     self.access_count = 0 if self.access_count.nil?
   end
 
-  def get_chars_hash
-    chars = [*'0'..'9', *'a'..'z', *'A'..'Z', "_", "-"]
-  end
-
-  def bijective_encode(id, chars)
-    return chars[0] if id == 0
+  def bijective_encode(id)
+    return @@chars[0] if id == 0
     string = ""
-    base = chars.length
+    base = @@chars.length
     while id > 0
-      string << chars[id.modulo(base)]
+      string << @@chars[id.modulo(base)]
       id /= base
     end
     string.reverse
+  end
+
+  def self.bijective_decode(string)
+    id = 0
+    base = @@chars.length
+    string.each_char { |c| id = id * base + @@chars.index(c) }
+    id
   end
 end
