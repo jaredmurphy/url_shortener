@@ -10,9 +10,9 @@ Url.destroy_all
 prefix = "http://"
 suffix = ".com"
 arr = []
-i = 1 
+i = 1
 
-while i < 4300
+while i < 7000
     str = prefix + i.to_s + suffix
     arr.push({full_link: str})
     i += 1
