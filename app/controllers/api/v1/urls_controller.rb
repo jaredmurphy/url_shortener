@@ -14,11 +14,13 @@ class Api::V1::UrlsController < ApplicationController
   end
 
   def top
-    render json: Url.top
+    top_urls = Url.top
+    render json: top_urls
   end
 
   private
   def url_params
+    #ActiveModelSerializers::Deserialization.jsonapi_parse!(params, only: [:full_link] )
     params.require(:url).permit(:full_link)
   end
 end

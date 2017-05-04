@@ -1,5 +1,9 @@
 # URL shortenr 
+- Front End Ember App -> [here](https://github.com/jaredmurphy/url_shortener_client)
+
 Url shortening is being done by taking the Serial Id of each entry and converting it to my base64 alphabet. It is all being handled by a model method called generate\_short\_link. The algorithm is a bijective function so i can decode the short_url. 
+
+
 
 #### todo 
 * ~~update shortening algorithm to make urls as short as possible~~
