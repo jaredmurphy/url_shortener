@@ -33,5 +33,17 @@ RSpec.describe "Urls API" do
         expect(response.status).to eq(400)
       end
     end
+
+    context "when the url already exists" do
+      it "returns the original" do
+        link = FactoryGirl.build(:url)
+        post "/api/v1/urls", params: { url: {full_link: link.full_link} }
+        link_two = link
+        post "/api/v1/urls", params: { url: {full_link: link_two.full_link} }
+        json = JSON.parse(response.body)
+        expect(response).to be_success
+        expect(json["full_link"]).to eq(link.full_link)
+      end
+    end
   end
 end

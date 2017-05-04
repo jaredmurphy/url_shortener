@@ -10,14 +10,14 @@ class Url < ApplicationRecord
   validates :access_count, presence: true
   validates :short_link, uniqueness: true
 
+  @@chars = [*'0'..'9', *'a'..'z', *'A'..'Z', "_", "-"]
+
   def increment_access_count
     self.update_attributes!(access_count: access_count + 1)
   end
 
   scope :location, -> (s_link) { Url.find(generate_id_from_short_link(s_link)).full_link }
   scope :top, -> { all.order(access_count: :desc) }
-
-  @@chars = [*'0'..'9', *'a'..'z', *'A'..'Z', "_", "-"]
 
   def generate_short_link
     # concepts for generating short link are gathered from these two resources

@@ -1,5 +1,51 @@
 # URL shortenr 
 Url shortening is being done by taking the Serial Id of each entry and converting it to my base64 alphabet. It is all being handled by a model method called generate\_short\_link. The algorithm is a bijective function so i can decode the short_url. 
+
+#### todo 
+* ~~update shortening algorithm to make urls as short as possible~~
+* ~~handle case for url already exists~~
+* cors
+
+## Thoughts
+#### Rails API
+Models: 
+* url
+  * id
+  * hashed_id (base64? base256?) unique 
+  * full_url
+  * domain
+  * # of times accessed
+
+Routes:
+* Get 
+  * /urls/:hashed_id
+    * => will redirect to full url
+  * /urls/lists/top
+    * top 100 links (by number of times accessed)
+* Post 
+  * /urls
+    * create new url 
+    * or send back a previous one if that link exists
+
+* URL shortner - should happen either in model or let SQL handle it
+
+
+#### Testing 
+1. Url 
+  * valid url?
+    * format - solve with RegEx
+
+
+
+##### Reach Goals
+* bot to keep hitting links 
+* web sockets
+* private urls - keep track of yours only
+* without signing in you just use public ones
+* custom url? - only with user auth 
+* some kind of timer to prevent bots from rapid fire clicks
+* lists of links - private or public 
+
 <!-- #### Short Url encoding
 Current system permutates over base64 characters for unique strings. 
 * I created a Ruby hash with each character from my base64 list and a number reference number for each. 
@@ -49,50 +95,5 @@ Exmple:
 
 #=> "ZWPKTOQ"
 ``` -->
-
-#### todo 
-* update shortening algorithm to make urls as short as possible
-* handle case for url already exists
-* cors
-
-## Thoughts
-#### Rails API
-Models: 
-* url
-  * id
-  * hashed_id (base64? base256?) unique 
-  * full_url
-  * domain
-  * # of times accessed
-
-Routes:
-* Get 
-  * /urls/:hashed_id
-    * => will redirect to full url
-  * /urls/lists/top
-    * top 100 links (by number of times accessed)
-* Post 
-  * /urls
-    * create new url 
-    * or send back a previous one if that link exists
-
-* URL shortner - should happen either in model or let SQL handle it
-
-
-#### Testing 
-1. Url 
-  * valid url?
-    * format - solve with RegEx
-
-
-
-##### Reach Goals
-* bot to keep hitting links 
-* web sockets
-* private urls - keep track of yours only
-* without signing in you just use public ones
-* custom url? - only with user auth 
-* some kind of timer to prevent bots from rapid fire clicks
-* lists of links - private or public 
 
 

@@ -4,7 +4,12 @@ class Api::V1::UrlsController < ApplicationController
     if new_url.save
       render json: new_url
     else
-      render json: new_url.errors, status: 400
+      if new_url.errors.messages[:full_link] == ["has already been taken"]
+        url = Url.find_by(url_params)
+        render json: url
+      else
+        render json: new_url.errors, status: 400
+      end
     end
   end
 
