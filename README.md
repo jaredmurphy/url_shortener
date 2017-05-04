@@ -4,7 +4,7 @@ Url shortening is being done by taking the Serial Id of each entry and convertin
 #### todo 
 * ~~update shortening algorithm to make urls as short as possible~~
 * ~~handle case for url already exists~~
-* cors
+* ~~cors~~
 
 ## Thoughts
 #### Rails API
@@ -39,6 +39,7 @@ Routes:
 
 ##### Reach Goals
 * bot to keep hitting links 
+* redis 
 * web sockets
 * private urls - keep track of yours only
 * without signing in you just use public ones
