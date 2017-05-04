@@ -12,7 +12,7 @@ suffix = ".com"
 arr = []
 i = 1 
 
-while i < 4100
+while i < 4300
     str = prefix + i.to_s + suffix
     arr.push({full_link: str})
     i += 1

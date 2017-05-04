@@ -1,6 +1,15 @@
 # URL shortenr 
 
 #### Short Url encoding
+Current system permutates over base64 characters for unique strings. 
+* I created a Ruby hash with each character from my base64 list and a number reference number for each. 
+* The numbers are not randomly genrated nor are they based on the serial primary key, they are simply incremented
+* The number allows me to increment through the hash and allows me to make sure i hit every permutation given a number of characters. 
+* They are super short strings! With a seed of 4300 entries I just started using a third caracter.
+* Need to clean up logic and test on high numbers of permuations to ensure scalability 
+
+
+=====================
 EDIT: 
 * I need the url to be the SHORTEST POSSIBLE length, rather than choosing 7 characters like I previously planned. 
 * I can continue using Ruby's SecureRandom.urlsafe_base64, which will allow me to get a random string given the number of bytes I need it to use. 
