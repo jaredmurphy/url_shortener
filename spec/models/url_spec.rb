@@ -27,9 +27,9 @@ RSpec.describe Url, :type => :model do
     expect(link.access_count).to eq(3)
   end
   
-  it "hashes the link into 7 character string" do 
-    link = FactoryGirl.create(:url)
-    expect(link.short_link).to be_a(String)
-    expect(link.short_link.length).to eq(7)
-  end
+  #it "hashes the link into 7 character string" do 
+  #  link = FactoryGirl.create(:url)
+  #  expect(link.short_link).to be_a(String)
+  #  expect(link.short_link.length).to eq(7)
+  #end
 end

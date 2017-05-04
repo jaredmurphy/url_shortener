@@ -1,0 +1,2 @@
+      invoke  active_record
+      create    db/migrate/20170504062244_change_column.rb

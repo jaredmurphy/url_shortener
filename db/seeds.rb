@@ -5,3 +5,19 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+Url.destroy_all
+prefix = "http://"
+suffix = ".com"
+arr = []
+i = 1 
+
+while i < 200
+    str = prefix + i.to_s + suffix
+    arr.push({full_link: str})
+    i += 1
+end
+
+urls = Url.create(arr)
+
+puts "#{Url.count} urls created"

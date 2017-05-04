@@ -19,7 +19,7 @@ SecureRandom.urlsafe_base64(3)
 
 So, if I know I already have 4096 (64 x 64) entries in the database, then the algorithm can ask for the byte length of 2 which will increase the hash length to 3 characters.  
 
-**I anticipate a problem with this approach** which is that the randomly assigning a hash will become more and more expensive as the application grows and more and more items are persisted in the url. 
+**I anticipate a problem with this approach** which is that the randomly assigning a hash will become more and more expensive as the application grows and more and more items are persisted in the db. 
 
 **The solution to this problem**, I think is most likely generating 64base strings off the primary key of the db entries, rather than assigning a random 64base string. I wanted to avoid this approach initially, because of security concerns with exposing incremental values. However, 1) the data in this app is NOT sensitive. 2) the project does not call for any security measures. 
 
