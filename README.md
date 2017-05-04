@@ -1,6 +1,6 @@
 # URL shortenr 
-
-#### Short Url encoding
+Url shortening is being done by taking the Serial Id of each entry and converting it to my base64 alphabet. It is all being handled by a model method called generate\_short\_link. The algorithm is a bijective function so i can decode the short_url. 
+<!-- #### Short Url encoding
 Current system permutates over base64 characters for unique strings. 
 * I created a Ruby hash with each character from my base64 list and a number reference number for each. 
 * The numbers are not randomly genrated nor are they based on the serial primary key, they are simply incremented
@@ -48,7 +48,7 @@ Exmple:
  SecureRandom.urlsafe_base64(5)
 
 #=> "ZWPKTOQ"
-```
+``` -->
 
 #### todo 
 * update shortening algorithm to make urls as short as possible

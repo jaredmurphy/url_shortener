@@ -1,6 +1,6 @@
 RSpec.describe "Urls API" do
   it "redirects to full link" do
-    link = FactoryGirl.create(:url)
+      link = FactoryGirl.create(:url)
     get "/#{link.short_link}"
     expect(response.status).to eq(302)
     expect(response).to redirect_to("#{link.full_link}")
