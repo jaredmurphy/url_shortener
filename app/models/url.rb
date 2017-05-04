@@ -1,6 +1,6 @@
 class Url < ApplicationRecord
   before_validation :default_access_count
-  before_save :generate_short_link
+  after_create :generate_short_link
 
   validates :full_link,
     presence: true,
@@ -11,11 +11,21 @@ class Url < ApplicationRecord
   validates :short_link, uniqueness: true
 
   def increment_access_count
-    self.access_count = self.access_count + 1
+    self.update_attributes!(access_count: access_count + 1)
   end
 
   scope :location, -> (s_link) { find_by(short_link: s_link).full_link }
   scope :top, -> { all.order(access_count: :desc) }
+
+  def generate_short_link
+    # concepts for generating short link are gathered from these two resources
+    # http://stackoverflow.com/questions/742013/how-to-code-a-url-shortener/742047#742047
+    # https://gist.github.com/zumbojo/1073996
+    chars = [*'0'..'9', *'a'..'z', *'A'..'Z', "_", "-"]
+    id = self.id
+    short_link = bijective_encode(id, chars)
+    self.update_attributes!(short_link: short_link)
+  end
 
   private
 
@@ -25,75 +35,16 @@ class Url < ApplicationRecord
 
   def get_chars_hash
     chars = [*'0'..'9', *'a'..'z', *'A'..'Z', "_", "-"]
-    chars.each_with_index.reduce({}) do |hash, (string, i)|
-      hash[i + 1] = string
-      hash
+  end
+
+  def bijective_encode(id, chars)
+    return chars[0] if id == 0
+    string = ""
+    base = chars.length
+    while id > 0
+      string << chars[id.modulo(base)]
+      id /= base
     end
+    string.reverse
   end
-
-   def generate_short_link
-    chars = get_chars_hash
-    if !Url.last # if this is the first entry
-       self.short_link = chars[1]
-    else
-      last_entry = Url.last
-      byebug if last_entry.short_link == ""
-      last_entry_split = last_entry.short_link.split("")
-      last_entry_keys = map_values_to_keys(last_entry_split, chars)
-
-      perumutations_left(last_entry_split, last_entry_keys, chars)
-    end
-  end
-
-  def perumutations_left(last_entry_split, last_entry_keys, chars)
-    if last_entry_keys.uniq == [64]
-      add_new_character(last_entry_keys, chars)
-    elsif  last_entry_keys.last != 64
-      increment_short_url(last_entry_keys, chars)
-    elsif last_entry_keys.last == 64
-      move_to_next_row(last_entry_split, last_entry_keys, chars)
-    end
-  end
-
-  def add_new_character(last_entry_keys, chars) # adds a new character in the short_link string
-    new_keys = last_entry_keys.map {|num| chars.keys.first}
-    new_keys.push(chars.keys.first)
-    map_keys_to_values_and_set_short_link(new_keys, chars)
-  end
-
-  def increment_short_url(last_entry_keys, chars) # increment the last character
-    num = last_entry_keys.last
-    last_entry_keys.pop
-    last_entry_keys.push num + 1
-    map_keys_to_values_and_set_short_link(last_entry_keys, chars)
-  end
-
-  def move_to_next_row(last_entry_split, last_entry_keys, chars)
-  # replace the second to last character with the incremented key
-    new_keys = last_entry_keys.each_with_index.map do |key, index|
-      if key < 64 # if key < 64 and the next one = 64, then we need to increment this one
-        if last_entry_keys[index+1] == 64
-          key = key + 1
-        end
-      elsif key == 64
-        key = 1
-      end
-      key
-    end
-    map_keys_to_values_and_set_short_link(new_keys, chars)
-  end
-
-  def map_keys_to_values_and_set_short_link(new_keys, chars)
-    short_link = new_keys.map do |num|
-      chars[num]
-    end
-    self.short_link = short_link.join("")
-  end
-
-  def map_values_to_keys(values, chars)
-    values.map do |str|
-      chars.key(str)
-    end
-  end
-
 end

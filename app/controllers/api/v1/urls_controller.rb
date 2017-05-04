@@ -1,9 +1,9 @@
 class Api::V1::UrlsController < ApplicationController
-  def create 
+  def create
     new_url = Url.new(url_params)
     if new_url.save
       render json: new_url
-    else 
+    else
       render json: new_url.errors, status: 400
     end
   end
@@ -12,7 +12,7 @@ class Api::V1::UrlsController < ApplicationController
     render json: Url.top
   end
 
-  private 
+  private
   def url_params
     params.require(:url).permit(:full_link)
   end

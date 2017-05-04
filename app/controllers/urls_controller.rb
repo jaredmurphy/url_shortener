@@ -1,4 +1,4 @@
-class UrlsController < ApplicationController 
+class UrlsController < ApplicationController
   def show
     redirect_to Url.location(params[:short_link])
   end
