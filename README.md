@@ -1,104 +1,44 @@
-# URL shortenr 
-- Front End Ember App -> [here](https://github.com/jaredmurphy/url_shortener_client)
+# URL Shortener 
 
-Url shortening is being done by taking the Serial Id of each entry and converting it to my base64 alphabet. It is all being handled by a model method called generate\_short\_link. The algorithm is a bijective function so i can decode the short_url. 
+##### About this README
+This markdown file contains information about the project as a whole, including wins, challenges, and an explanation of the shortening algorithm. It also contains information about the Rails API specifically - such as setup and install. Information for the client side app written in Ember can be found - [here](https://github.com/jaredmurphy/url_shortener_client)
 
+##### Deployment 
+You can find the deployed Rails API deployed on Heroku [here](https://url-shortenerapi.herokuapp.com/api/v1/tops)
 
+The deployed Ember app is also on Heroku [here](https://protected-reaches-70331.herokuapp.com/)
 
-#### todo 
-* ~~update shortening algorithm to make urls as short as possible~~
-* ~~handle case for url already exists~~
-* ~~cors~~
+##### Setup and Install
+To set up the Rails API:
+* Clone this repo 
+* run `bundle install`
+* run `rails db:setup`
 
-## Thoughts
-#### Rails API
-Models: 
-* url
-  * id
-  * hashed_id (base64? base256?) unique 
-  * full_url
-  * domain
-  * # of times accessed
+To run tests:
+* run `rspec`
 
-Routes:
-* Get 
-  * /urls/:hashed_id
-    * => will redirect to full url
-  * /urls/lists/top
-    * top 100 links (by number of times accessed)
-* Post 
-  * /urls
-    * create new url 
-    * or send back a previous one if that link exists
+To start the server
+* run `rails server`
 
-* URL shortner - should happen either in model or let SQL handle it
+***NOTE*** This app uses a postgresql database, so you will need to make sure you have it installed. 
 
+If needed, here are instructions for install postgresql with Homebrew [https://gist.github.
+com/sgnl/609557ebacd3378f3b72](https://gist.github.com/sgnl/609557ebacd3378f3b72)
 
-#### Testing 
-1. Url 
-  * valid url?
-    * format - solve with RegEx
+### Project 
 
+##### Shortening Algorithm
+The alrgorithm I wound up with takes in the id of the recently created item and generates a string that represents the id number in Base64. This allowed me to only have the bare minimum number of characters in the `short_link`, in a similar way to how Bitly and TinyUrl accomplish this. I chose Base64, which in this case was Base62 plus "_" and "-". This will allow me to have smaller minimum characters than Base62, and is still url safe. The algorithm uses a bijective function, which allows the `short_link` in Base64 to be directly transposed to the original `full_link`. There are two functions that make this happen in the model bijective\_encode and bijective\_decode. The former takes Base10 into Base64 and the later takes Base64 into Base10. When the app saves a url to the database it encodes the id, and then when someone follows the short link back to our app it decodes the short\_link and finds the serial id, then redirects to the original full length url. 
 
+##### Wins 
+I had a lot of fun building this app out. There's a few things I feel really happy about. 
+1. Client-side app built in Ember. I used Bootstrap to do some the styling on this app.
+I really wanted to develop the client in Ember to demonstrate my ability to pick up new things, given my very limited experience with it. I'm finding Ember to be nice to work with. 
+2. BDD 
+The Rails API (other than the shortening algorithm) was pretty much all developed by writing RSpec tests first before writing the code. I included model and request specs. I used FactoryGirl and Faker to test creation and behavior of the Url model. 
+3. Met core requirements, had fun 
 
-##### Reach Goals
-* bot to keep hitting links 
-* redis 
-* web sockets
-* private urls - keep track of yours only
-* without signing in you just use public ones
-* custom url? - only with user auth 
-* some kind of timer to prevent bots from rapid fire clicks
-* lists of links - private or public 
-
-<!-- #### Short Url encoding
-Current system permutates over base64 characters for unique strings. 
-* I created a Ruby hash with each character from my base64 list and a number reference number for each. 
-* The numbers are not randomly genrated nor are they based on the serial primary key, they are simply incremented
-* The number allows me to increment through the hash and allows me to make sure i hit every permutation given a number of characters. 
-* They are super short strings! With a seed of 4300 entries I just started using a third caracter.
-* Need to clean up logic and test on high numbers of permuations to ensure scalability 
-
-
-=====================
-EDIT: 
-* I need the url to be the SHORTEST POSSIBLE length, rather than choosing 7 characters like I previously planned. 
-* I can continue using Ruby's SecureRandom.urlsafe_base64, which will allow me to get a random string given the number of bytes I need it to use. 
-
-Example:
-```
-SecureRandom.urlsafe_base64(1)
-#=> "tA"
-
-SecureRandom.urlsafe_base64(2)
-#=> "dIU"
-
-SecureRandom.urlsafe_base64(3)
-#=> "7AXP"
-```
-
-So, if I know I already have 4096 (64 x 64) entries in the database, then the algorithm can ask for the byte length of 2 which will increase the hash length to 3 characters.  
-
-**I anticipate a problem with this approach** which is that the randomly assigning a hash will become more and more expensive as the application grows and more and more items are persisted in the db. 
-
-**The solution to this problem**, I think is most likely generating 64base strings off the primary key of the db entries, rather than assigning a random 64base string. I wanted to avoid this approach initially, because of security concerns with exposing incremental values. However, 1) the data in this app is NOT sensitive. 2) the project does not call for any security measures. 
-
-Next step is encoding primary keys into 64base (and url safe) strings. 
-
-================
-
-Previous thoughts: 
-* going with base64 - used by Google for their Youtube id's
-* ~~Bitly uses 7 characters~~
-* looked at base 62 (to avoid base64 issues with url) but found Ruby's urlsafe_base64. 
-* so i get benefits of base64 without the problems associated with url characters 
-* ~~The plan is to generate a random base64 string with secure random to avoid incremental id's and to ensure that we can get the largest number of unique ids in 7 characters'~~
-
-Exmple: 
-```
- SecureRandom.urlsafe_base64(5)
-
-#=> "ZWPKTOQ"
-``` -->
-
-
+##### Challenges
+1. Shortening Algorithm 
+I definitely feel like this was the biggest challenge for this project. I was able to find an elegant solution to make urls as short as possible, but it took me some time to get there. I had written a previous solution that produced similar results by generating a Base64 string of the smallest length by iterating through permutations of the Base64 alphabet. However, this method relied on the `short_link` of the previous record, and may have reliablity issues with many requests. Creating the `short_link` based on the id of the `Url` was a better approach. 
+2. There were many reach goals I wanted to get to, but did not have time for.
