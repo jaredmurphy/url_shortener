@@ -1,15 +1,15 @@
 RSpec.describe "Urls API" do
   it "redirects to full link" do
-      link = FactoryGirl.create(:url)
-    get "/#{link.short_link}"
+    link = FactoryGirl.create(:url)
+    get "#{link.short_link}"
     expect(response.status).to eq(302)
     expect(response).to redirect_to("#{link.full_link}")
   end
 
   it "sends a list of top 100 links" do
     FactoryGirl.create_list(:url_already_accessed, 100)
-    get "/api/v1/urls/lists/top"
-    json = JSON.parse(response.body)
+    get "/api/v1/tops"
+    json = JSON.parse(response.body)["urls"]
     expect(response).to be_success
     expect(json.length).to eq(100)
     expect(json.first["access_count"] > json.last["access_count"])
@@ -20,7 +20,7 @@ RSpec.describe "Urls API" do
       it "creates a new Url in the database" do
         link = FactoryGirl.build(:url)
         post "/api/v1/urls", params: { url: {full_link: link.full_link} }
-        json = JSON.parse(response.body)
+        json = JSON.parse(response.body)["url"]
         expect(response).to be_success
         expect(json["full_link"]).to eq(link.full_link)
       end
@@ -40,7 +40,7 @@ RSpec.describe "Urls API" do
         post "/api/v1/urls", params: { url: {full_link: link.full_link} }
         link_two = link
         post "/api/v1/urls", params: { url: {full_link: link_two.full_link} }
-        json = JSON.parse(response.body)
+        json = JSON.parse(response.body)["url"]
         expect(response).to be_success
         expect(json["full_link"]).to eq(link.full_link)
       end
