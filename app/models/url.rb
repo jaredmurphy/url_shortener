@@ -12,12 +12,12 @@ class Url < ApplicationRecord
 
   @@chars = [*'0'..'9', *'a'..'z', *'A'..'Z', "_", "-"]
 
+  scope :location, -> (s_link) { Url.find(generate_id_from_short_link(s_link)) }
+  scope :top, -> { all.order(access_count: :desc) }
+
   def increment_access_count
     self.update_attributes!(access_count: access_count + 1)
   end
-
-  scope :location, -> (s_link) { Url.find(generate_id_from_short_link(s_link)).full_link }
-  scope :top, -> { all.order(access_count: :desc) }
 
   def generate_short_link
     # concepts for generating short link are gathered from these two resources
@@ -25,7 +25,7 @@ class Url < ApplicationRecord
     # https://gist.github.com/zumbojo/1073996
     id = self.id
     short_link = bijective_encode(id)
-    self.update_attributes!(short_link: short_link)
+    self.update_attributes!(short_link: "#{ENV['ENV_URL']}#{short_link}")
   end
 
   def self.generate_id_from_short_link(short_link)
