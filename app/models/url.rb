@@ -25,7 +25,8 @@ class Url < ApplicationRecord
     # https://gist.github.com/zumbojo/1073996
     id = self.id
     short_link = bijective_encode(id)
-    self.update_attributes!(short_link: "#{ENV['ENV_URL']}#{short_link}")
+    home_route = ENV['ENV_URL'] || "http://localhost:3000/"
+    self.update_attributes!(short_link: "#{home_route}#{short_link}")
   end
 
   def self.generate_id_from_short_link(short_link)
