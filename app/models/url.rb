@@ -13,7 +13,7 @@ class Url < ApplicationRecord
   @@chars = [*'0'..'9', *'a'..'z', *'A'..'Z', "_", "-"]
 
   scope :location, -> (s_link) { Url.find(generate_id_from_short_link(s_link)) }
-  scope :top, -> { all.order(access_count: :desc) }
+  scope :top, -> { all.order(access_count: :desc).first(100) }
 
   def increment_access_count
     self.update_attributes!(access_count: access_count + 1)

@@ -3,6 +3,8 @@
 ##### About this README
 This markdown file contains information about the project as a whole, including wins, challenges, and an explanation of the shortening algorithm. It also contains information about the Rails API specifically - such as setup and install. Information for the client side app written in Ember can be found - [here](https://github.com/jaredmurphy/url_shortener_client)
 
+You can also find the code for the Sinatra Bot [here](https://github.com/jaredmurphy/url_shortener_bot)
+
 ##### Deployment 
 You can find the deployed Rails API deployed on Heroku [here](https://url-shortenerapi.herokuapp.com/api/v1/tops)
 
