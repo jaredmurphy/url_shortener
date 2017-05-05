@@ -22,9 +22,6 @@ To start the server
 
 ***NOTE*** This app uses a postgresql database, so you will need to make sure you have it installed. 
 
-If needed, here are instructions for install postgresql with Homebrew [https://gist.github.
-com/sgnl/609557ebacd3378f3b72](https://gist.github.com/sgnl/609557ebacd3378f3b72)
-
 ### Project 
 
 ##### Shortening Algorithm
@@ -32,13 +29,19 @@ The alrgorithm I wound up with takes in the id of the recently created item and 
 
 ##### Wins 
 I had a lot of fun building this app out. There's a few things I feel really happy about. 
-1. Client-side app built in Ember. I used Bootstrap to do some the styling on this app.
-I really wanted to develop the client in Ember to demonstrate my ability to pick up new things, given my very limited experience with it. I'm finding Ember to be nice to work with. 
+1. Client-side app built in Ember.
+
+I used Bootstrap to do some the styling on this app.I really wanted to develop the client in Ember to demonstrate my ability to pick up new things, given my very limited experience with it. I'm finding Ember to be nice to work with. 
+
 2. BDD 
+
 The Rails API (other than the shortening algorithm) was pretty much all developed by writing RSpec tests first before writing the code. I included model and request specs. I used FactoryGirl and Faker to test creation and behavior of the Url model. 
+
 3. Met core requirements, had fun 
 
 ##### Challenges
 1. Shortening Algorithm 
+
 I definitely feel like this was the biggest challenge for this project. I was able to find an elegant solution to make urls as short as possible, but it took me some time to get there. I had written a previous solution that produced similar results by generating a Base64 string of the smallest length by iterating through permutations of the Base64 alphabet. However, this method relied on the `short_link` of the previous record, and may have reliablity issues with many requests. Creating the `short_link` based on the id of the `Url` was a better approach. 
+
 2. There were many reach goals I wanted to get to, but did not have time for.
